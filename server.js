@@ -32,11 +32,14 @@ app.post("/", (req, res) => {
   con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
-    var sql = `INSERT INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
+    var sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
+      //res.status(200).json({ redirectUrl: "/"});
+      res.redirect('/')
     });
+
   });
 
   //res.status(200).send('Data received!');
@@ -64,11 +67,14 @@ app.post('/user_auth', (req, res) => {
   con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
-    var sql = `INSERT INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
+    var sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
+      //res.status(200).json({ redirectUrl: "/"});
+      res.redirect('/')
     });
+
   });
 
   //res.status(200).send('Data received!');
