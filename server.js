@@ -66,7 +66,7 @@ app.post("/", (req, res) => {
 
 
 
-app.post('/user_auth', async (req, res) => {
+app.post('/user_auth_old', async (req, res) => {
   console.log(req.body)
   try {
     const { username, password } = req.body;
@@ -79,20 +79,13 @@ app.post('/user_auth', async (req, res) => {
 
 
 app.post('/user_auth_custom', upload.none(), async (req, res) => {
-  console.log(req.body)
-  console.log(req.body)
   try {
     const { username, password } = req.body;
     const result = await mysqlCreateUser(username, password);
-    console.log(result)
     res.status(200).send('User created');
   } catch (err) {
     res.status(500).send('Database error');
   }
-  //const username = req.body.username;
-  //const password = req.body.password;
-  //mysqlCreateUser(username, password)
-  
 });
 
 server.listen(port, () => {

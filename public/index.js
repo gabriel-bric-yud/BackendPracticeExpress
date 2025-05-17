@@ -26,6 +26,10 @@ loginForm.addEventListener("submit", async (e) => {
 
 
 
+
+
+/**
+
 async function MySQLFormDataRequest(url = "", dataArray = []) {
   let formData = new FormData();
   for (let i = 0; i < dataArray.length; i++) {
@@ -42,7 +46,7 @@ async function MySQLFormDataRequest(url = "", dataArray = []) {
 
 
 usernameBtn.addEventListener("click", (e) => {
-  fetch("http://localhost:4000/user_auth", {
+  fetch("http://localhost:4000/user_auth_old", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -54,4 +58,5 @@ usernameBtn.addEventListener("click", (e) => {
   });
 })
 
-let secondaryBtn = document.getElementById("secondaryBtn")
+
+ */
