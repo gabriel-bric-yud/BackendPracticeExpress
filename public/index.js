@@ -1,30 +1,31 @@
 let usernameBtn = document.getElementById("usernameBtn")
-let loginForm = document.getElementById("login-form")
+let registerForm = document.getElementById("register-form")
 
-loginForm.addEventListener("submit", async (e) => {
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const formData = new FormData(e.target);
   for (const [key, value] of formData.entries()) {
     console.log(`${key}: ${value}`);
   }
 
-  await fetch(e.target.action, {
-    method: "POST",
-    body: formData
-  })
-  .then(data => data.json())
-  .then(res => {
-    if (res.ok) {
-      alert("Successful")
+  try {
+    const response = await fetch(e.target.action, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Successful");
+    } else {
+      alert(data.message || "Failed");
     }
-    else {
-      alert("failed")
-    }
-
-  })
-})
-
-
+  } catch (err) {
+    alert("Something went wrong");
+  }
+});
 
 
 

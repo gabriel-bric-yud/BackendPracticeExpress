@@ -57,7 +57,7 @@ function mysqlCreateUser(username, password) {
   })
 }
 
-app.post("/", (req, res) => {
+app.post("/users/login", (req, res) => {
   console.log(req.body)
   const username = req.body.username;
   const password = req.body.password;
@@ -66,7 +66,7 @@ app.post("/", (req, res) => {
 
 
 
-app.post('/user_auth_old', async (req, res) => {
+app.post('/', async (req, res) => {
   console.log(req.body)
   try {
     const { username, password } = req.body;
@@ -78,7 +78,7 @@ app.post('/user_auth_old', async (req, res) => {
 });
 
 
-app.post('/user_auth_custom', upload.none(), async (req, res) => {
+app.post('/users/register', upload.none(), async (req, res) => {
   try {
     const { username, password } = req.body;
     const result = await mysqlCreateUser(username, password);

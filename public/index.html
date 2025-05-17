@@ -15,7 +15,7 @@
     
   <div class = 'titleDiv'>Create Account</div>
 
-  <form  method="post">
+  <form id = "login-form" method="post"  action = "users/login"> <!--/auth/login-->
     <input
       type="text"
       name="username"
@@ -27,7 +27,7 @@
     <input type="submit" value="OK" />
   </form>
 
-  <form id = "login-form" action = "/user_auth_custom">
+  <form id = "register-form" action = "/users/register">
     <label for="userAuthName">Enter name: </label>
     <input
       id = "userAuthName"
