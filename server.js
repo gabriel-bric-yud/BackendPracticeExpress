@@ -1,85 +1,99 @@
-var express = require('express');
-var app = express();
-var mysql = require('mysql2');
+const express = require('express');
+const app = express();
+
 const http = require("http");
 const server = http.createServer(app);
 const port = process.env.PORT || '4000';
 app.set('port', port);
 
+const cors = require('cors');
+const mysql = require('mysql2');
+const multer = require('multer');
+const upload = multer();
+
 app.use(express.static('public'));
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Content-Type', 'text/plain');
-  next();
-});
-
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+
+function mysqlCreateUserSimple(username, password) {
+  let con = mysql.createConnection({
+    host: "localhost",
+    user: "user_auth_writer",
+    password: "user_auth_writer",
+    database: "user_auth"
+  });
+
+  con.connect((err) => {
+    if (err) throw err;
+    console.log("Connected!");
+    var sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("1 record inserted");
+    });
+  });
+}
+
+
+function mysqlCreateUser(username, password) {
+  return new Promise((resolve, reject) => {
+    let con = mysql.createConnection({
+      host: "localhost",
+      user: "user_auth_writer",
+      password: "user_auth_writer",
+      database: "user_auth"
+    });
+
+    con.connect((err) => {
+      if (err) return reject(err);
+      const sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES (?, ?)`;
+      con.query(sql, [username, password], (err, result) => {
+        if (err) return reject(err);
+        resolve(result)
+      });
+    });
+  })
+}
 
 app.post("/", (req, res) => {
   console.log(req.body)
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username)
-  let con = mysql.createConnection({
-    host: "localhost",
-    user: "user_auth_writer",
-    password: "user_auth_writer",
-    database: "user_auth"
-  });
-
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    var sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-      //res.status(200).json({ redirectUrl: "/"});
-      res.redirect('/')
-    });
-
-  });
-
-  //res.status(200).send('Data received!');
-
+  mysqlCreateUser(username, password)
 })
 
-app.use(express.json());
-
-app.post('/user_auth', (req, res) => {
 
 
-
-  const username = req.body.username;
-  const password = req.body.password;
-  console.log(username)
-
-  
-  let con = mysql.createConnection({
-    host: "localhost",
-    user: "user_auth_writer",
-    password: "user_auth_writer",
-    database: "user_auth"
-  });
-
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    var sql = `INSERT IGNORE INTO users (username, hashed_password) VALUES ("${username}", "${password}")`;
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-      //res.status(200).json({ redirectUrl: "/"});
-      res.redirect('/')
-    });
-
-  });
-
-  //res.status(200).send('Data received!');
+app.post('/user_auth', async (req, res) => {
+  console.log(req.body)
+  try {
+    const { username, password } = req.body;
+    await mysqlCreateUser(username, password);
+    res.status(200).send('User created');
+  } catch (err) {
+    res.status(500).send('Database error');
+  }
 });
 
+
+app.post('/user_auth_custom', upload.none(), async (req, res) => {
+  console.log(req.body)
+  console.log(req.body)
+  try {
+    const { username, password } = req.body;
+    const result = await mysqlCreateUser(username, password);
+    console.log(result)
+    res.status(200).send('User created');
+  } catch (err) {
+    res.status(500).send('Database error');
+  }
+  //const username = req.body.username;
+  //const password = req.body.password;
+  //mysqlCreateUser(username, password)
+  
+});
 
 server.listen(port, () => {
   console.log('listening on port: '+ port);

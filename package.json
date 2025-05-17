@@ -18,8 +18,10 @@
   "homepage": "https://github.com/gabriel-bric-yud/BackendPracticeExpress#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "http": "^0.0.1-security",
+    "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.1"
   }
 }

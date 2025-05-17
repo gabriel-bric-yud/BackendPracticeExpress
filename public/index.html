@@ -15,22 +15,37 @@
     
   <div class = 'titleDiv'>Primary</div>
   <div id = "usernameBtn" class = "btn">Click To Submit Username</div>
-  <div id = "secondaryBtn" class = "btn">secondary</div>
 
   <form  method="post">
-  <label for="userAuthName">Enter name: </label>
+  <label for="userAuthName1">Enter name: </label>
   <input
-    id = "userAuthName"
+    id = "userAuthName1"
     type="text"
     name="username"
     value="testUserDefault" required />
-  <label for="userAuthPass">Enter password: </label>
+  <label for="userAuthPass2">Enter password: </label>
   <input
-    id = "userAuthPass"
+    id = "userAuthPass2"
     type="password"
     name="password"
     value="testpasswordDefault"  required/>
   <input type="submit" value="OK" />
+  </form>
+
+  <form id = "login-form" action = "/user_auth_custom">
+    <label for="userAuthName">Enter name: </label>
+    <input
+      id = "userAuthName"
+      type="text"
+      name="username"
+      value="testUserDefault" required />
+    <label for="userAuthPass">Enter password: </label>
+    <input
+      id = "userAuthPass"
+      type="password"
+      name="password"
+      value="testpasswordDefault"  required/>
+    <input type="submit" value="OK" />
   </form>
 
   <!--
