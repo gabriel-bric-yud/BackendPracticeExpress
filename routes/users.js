@@ -6,15 +6,16 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+
 router.post('/register', upload.none(), async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, bio} = req.body;
 
   try {
     const existing = await User.findOne({ username });
     if (existing) return res.status(409).json({ message: 'User already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, hashedPassword });
+    const newUser = new User({ username, hashedPassword, bio });
 
     await newUser.save();
 
@@ -24,7 +25,7 @@ router.post('/register', upload.none(), async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', upload.none(), async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -34,9 +35,27 @@ router.post('/login', async (req, res) => {
     const match = await bcrypt.compare(password, user.hashedPassword);
     if (!match) return res.status(401).json({ message: 'Invalid credentials' });
 
-    res.status(200).json({ message: 'Login successful', userId: user._id });
+    res.status(200).json({ message: 'Login successful', userId: user._id, username: user.username });
   } catch (err) {
     res.status(500).json({ message: 'Login failed', error: err });
+  }
+});
+
+
+
+router.get('/:username', async (req, res) => {
+  const { username } = req.params; // Get id from URL
+
+  try {
+    const user = await User.findOne({ username }); // User.findById(id); or findOne({ _id: id })
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving user', error: err.message });
   }
 });
 
