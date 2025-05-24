@@ -5,14 +5,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,  
-    index: true       
+    index: true,       
   },
   hashedPassword: {
     type: String,
-    required: true
+    required: true,
   },
   bio: {
-    type: String
+    type: String,
+  },
+  profileImg: {
+    type: String,
+  },
+  lodgeImg: {
+    type: [String], 
   }
   // other fields...
 });
