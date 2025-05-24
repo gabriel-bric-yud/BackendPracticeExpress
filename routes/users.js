@@ -41,6 +41,22 @@ router.post('/login', upload.none(), async (req, res) => {
   }
 });
 
+router.post('/update/:field', upload.none(), async (req, res) => {
+  const { field } = req.params;     
+  const { username, value } = req.body;  
+
+  try {
+    const update = {};
+    update[field] = value;
+
+    await User.updateOne({ username }, { $set: update });
+    res.json({ message: "User updated successfully", value: value });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Update failed" });
+  }
+});
+
 router.get('/:username', async (req, res) => {
   const { username } = req.params; // Get id from URL
 

@@ -16,13 +16,13 @@ async function deleteBlobByUrl(blobUrl) {
 
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
   const exists = await blockBlobClient.exists();
-  
+
   if (exists) {
     await blockBlobClient.delete();
-    console.log(`Deleted blob: ${blobUrl}`);
+    console.log(`Deleted blob: ${url}`);
   } 
   else {
-    console.log(`Blob does not exist: ${blobUrl}`);
+    console.log(`Blob does not exist: ${url}`);
   }
 }
 
@@ -45,7 +45,6 @@ router.post('/profileImg', upload.single('photo'), async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) return res.status(404).send('User not found');
-    deleteBlobByUrl(user.profileImg)
     user.profileImg = imageUrl;
 
     await user.save();
@@ -91,11 +90,13 @@ router.post('/lodgeImg', upload.single('photo'), async (req, res) => {
 });
 
 
-profile.post('/deleteImg', upload.none(), async (req, res) => { 
-  const blobUrl = req.body
+router.post('/deleteImg', upload.none(), async (req, res) => { 
+  const {username, blobUrl} = req.body
   deleteBlobByUrl(blobUrl)
+  const user = await User.findOne({ username });
+  user.lodgeImg = user.lodgeImg.filter((elem) => elem != blobUrl)
+  await user.save();
   res.status(200)
-
 })
 
 
